@@ -42,5 +42,19 @@ namespace Testing_Core.SQL
             dataTable.Load(reader);
             return dataTable;
         }
+
+        public List<string> GetColumnValues(DataTable dataTable, string columnName)
+        {
+            List<string> columnValues = [];
+            if (dataTable.Columns.Contains(columnName))
+            {
+                foreach (DataRow row in dataTable.Rows)
+                {
+                    string? value = row[columnName]?.ToString();
+                    columnValues.Add(value!);
+                }
+            }
+            return columnValues;
+        }
     }
 }

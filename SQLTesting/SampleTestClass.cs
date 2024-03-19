@@ -19,6 +19,7 @@ namespace SQLTesting
             sqlBase.CloseDatabaseConnection(connection);
             var numberOfRows = data.Rows.Count;
             Assert.That(numberOfRows, Is.GreaterThan(1));
+            var a = sqlBase.GetColumnValues(data, "UserID");
         }
     }
 }
