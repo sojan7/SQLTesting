@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using Testing_Core.SQL;
 
 namespace SQLTesting
 {
@@ -8,8 +9,16 @@ namespace SQLTesting
         [Test, Category("Sample Tests")]
         public void SampleTest()
         {
-            int a = 1;
-            Assert.That(a, Is.EqualTo(1));
+            string connectionString = "Data Source=EPINHYDW0148\\SQLEXPRESS;Initial Catalog=Sojan_Test;User ID=sa;Password=Welcome123!;Connect Timeout=30;Encrypt=True;TrustServerCertificate=True;";
+            string query = "SELECT * FROM [Test_Users] WITH(NOLOCK)";
+
+            var sqlBase = new SqlBase(connectionString);
+            var connection = sqlBase.CreateSqlConnection();
+            sqlBase.OpenDatabaseConnection(connection);
+            var data = sqlBase.ExecuteReader(connection, query);
+            sqlBase.CloseDatabaseConnection(connection);
+            var numberOfRows = data.Rows.Count;
+            Assert.That(numberOfRows, Is.GreaterThan(1));
         }
     }
 }

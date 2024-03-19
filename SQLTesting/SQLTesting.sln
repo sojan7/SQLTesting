@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34622.214
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SQLTesting", "SQLTesting.csproj", "{ED979B5C-3E5F-4319-B41F-6B18C92EE2E2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SQLTesting", "SQLTesting.csproj", "{ED979B5C-3E5F-4319-B41F-6B18C92EE2E2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Testing_Core", "..\Testing_Core\Testing_Core.csproj", "{F1A925ED-D0A2-4EFF-BC54-D7D3177354D6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Testing_Core", "..\Testing_Core\Testing_Core.csproj", "{F1A925ED-D0A2-4EFF-BC54-D7D3177354D6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataBase_BusinessLayer", "..\DataBase_BusinessLayer\DataBase_BusinessLayer.csproj", "{85CC4B30-AA90-46F7-B611-B4B75002F662}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{F1A925ED-D0A2-4EFF-BC54-D7D3177354D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F1A925ED-D0A2-4EFF-BC54-D7D3177354D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F1A925ED-D0A2-4EFF-BC54-D7D3177354D6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{85CC4B30-AA90-46F7-B611-B4B75002F662}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{85CC4B30-AA90-46F7-B611-B4B75002F662}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{85CC4B30-AA90-46F7-B611-B4B75002F662}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{85CC4B30-AA90-46F7-B611-B4B75002F662}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
