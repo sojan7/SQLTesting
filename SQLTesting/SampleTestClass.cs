@@ -1,25 +1,24 @@
 ﻿using NUnit.Framework;
-using Testing_Core.SQL;
+using Testing_Core;
 
 namespace SQLTesting
 {
     [TestFixture]
     public class SampleTestClass
     {
-        [Test, Category("Sample Tests")]
-        public void SampleTest()
+        [Test, Category("Database Tests"), Order(1)]
+        public void VerifyIsConnectionEstablished()
         {
-            string connectionString = "Data Source=EPINHYDW0148\\SQLEXPRESS;Initial Catalog=Sojan_Test;User ID=sa;Password=Welcome123!;Connect Timeout=30;Encrypt=True;TrustServerCertificate=True;";
-            string query = "SELECT * FROM [Test_Users] WITH(NOLOCK)";
+            Assert.That(SqlClient.GetInstance().GetConnection(), Is.Not.Null);
+        }
 
-            var sqlBase = new SqlBase(connectionString);
-            var connection = sqlBase.CreateSqlConnection();
-            sqlBase.OpenDatabaseConnection(connection);
-            var data = sqlBase.ExecuteReader(connection, query);
-            sqlBase.CloseDatabaseConnection(connection);
-            var numberOfRows = data.Rows.Count;
-            Assert.That(numberOfRows, Is.GreaterThan(1));
-            var a = sqlBase.GetColumnValues(data, "UserID");
+        [Test, Category("Database Tests"), Order(2)]
+        public void VerifyQuery()
+        {
+            string query1 = "SELECT * FROM [Test_Users] WITH(NOLOCK) Where UserID < 10";
+            string query2 = "SELECT * FROM [Test_Users] WITH(NOLOCK) Where UserID > 10 AND UserID < 20 ;";
+            Assert.That(SqlClient.GetInstance().GetQueryResultDataTable(query1), Is.Not.Null);
+            Assert.That(SqlClient.GetInstance().GetQueryResultDataTable(query2), Is.Not.Null);
         }
     }
 }
