@@ -1,16 +1,23 @@
 ﻿using System.Data.SqlClient;
 using System.Data;
+using Microsoft.Extensions.Configuration;
 
 namespace Testing_Core
 {
     public class SqlClient : IDisposable
     {
-        private string ConnectionString { get; set; } = "Data Source=EPINHYDW0148\\SQLEXPRESS;Initial Catalog=Sojan_Test;User ID=sa;Password=Welcome123!;Connect Timeout=30;Encrypt=True;TrustServerCertificate=True;";
-        private static SqlClient sqlClient { get; set; } = null;
-        private SqlConnection Connection { get; set; } = null;
+        private static IConfiguration? Config { get; set; } = null;
+        private string ConnectionString { get; set; }
+        private static SqlClient? SqlClientInstance { get; set; } = null;
+        private SqlConnection? Connection { get; set; } = null;
 
         private SqlClient()
         {
+            var configurationFilePath = Directory.GetParent(Directory.GetCurrentDirectory())!.Parent!.Parent!.Parent!.FullName + "\\Testing_Core\\appsettings.json";
+            Config ??= new ConfigurationBuilder()
+              .AddJsonFile(configurationFilePath, optional: false, reloadOnChange: true)
+              .Build();
+            ConnectionString = Config["DataBaseConnectionStrings:Sojan_TestConnectionString"]!;
         }
 
         public void Dispose()
@@ -20,8 +27,8 @@ namespace Testing_Core
 
         public static SqlClient GetInstance()
         {
-            sqlClient ??= new SqlClient();
-            return sqlClient;
+            SqlClientInstance ??= new SqlClient();
+            return SqlClientInstance;
         }
 
         public SqlConnection GetConnection()
