@@ -79,7 +79,7 @@ namespace Testing_Core
         {
             while (sqlDataReader.Read())
             {
-                string name = sqlDataReader.GetString(colum);
+                var name = sqlDataReader.GetString(sqlDataReader.GetOrdinal(colum));
                 if (name.Equals(value))
                 {
                     return true;
@@ -88,23 +88,23 @@ namespace Testing_Core
             return false;
         }
 
-        public void CloseDatabaseConnection(SqlConnection connection)
+        public void CloseDatabaseConnection()
         {
-            if (connection.State != ConnectionState.Closed)
+            if (Connection.State != ConnectionState.Closed)
             {
-                connection.Close();
+                Connection.Close();
             }
         }
 
-        public void ExecuteNonQuery(SqlConnection connection, string query)
+        public int ExecuteNonQuery(string query)
         {
-            using var command = new SqlCommand(query, connection);
-            command.ExecuteNonQuery();
+            using var command = new SqlCommand(query, GetConnection());
+            return command.ExecuteNonQuery();
         }
 
-        public DataTable ExecuteReader(SqlConnection connection, string query)
+        public DataTable ExecuteReader(string query)
         {
-            var command = new SqlCommand(query, connection);
+            var command = new SqlCommand(query, GetConnection());
             using var reader = command.ExecuteReader();
             var dataTable = new DataTable();
             dataTable.Load(reader);
@@ -113,16 +113,38 @@ namespace Testing_Core
 
         public List<string> GetColumnValues(DataTable dataTable, string columnName)
         {
-            List<string> columnValues = [];
+            var columnValues = new List<string>();
             if (dataTable.Columns.Contains(columnName))
             {
                 foreach (DataRow row in dataTable.Rows)
                 {
-                    string? value = row[columnName]?.ToString();
+                    var value = row[columnName]?.ToString();
                     columnValues.Add(value!);
                 }
             }
             return columnValues;
+        }
+
+        public bool DoesTableExist(string tableName)
+        {
+            using var connection = GetConnection();
+            using var command = new SqlCommand($"SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = '{tableName}'", connection);
+            int count = (int)command.ExecuteScalar();
+            return count > 0;
+        }
+
+        public int CreateDatabase(string databaseName)
+        {
+            using var connection = GetConnection();
+            using var command = new SqlCommand($"CREATE DATABASE {databaseName}", connection);
+            return command.ExecuteNonQuery();
+        }
+
+        public int DropDatabase(string databaseName)
+        {
+            using var connection = GetConnection();
+            using var command = new SqlCommand($"DROP DATABASE {databaseName}", connection);
+            return command.ExecuteNonQuery();
         }
     }
 }
