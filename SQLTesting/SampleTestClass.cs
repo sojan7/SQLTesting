@@ -8,6 +8,13 @@ namespace SQLTesting
     [TestFixture]
     public class SampleTestClass
     {
+        private readonly BusinessLogic businessLogic;
+
+        public SampleTestClass()
+        {
+            businessLogic = new();
+        }
+
         [Test, Category("Database Tests"), Order(1)]
         public void VerifyIsConnectionEstablished()
         {
@@ -17,18 +24,30 @@ namespace SQLTesting
         [Test, Category("Database Tests"), Order(2)]
         public void VerifyQuery()
         {
-            string query1 = "SELECT * FROM [Test_Users] WITH(NOLOCK) Where UserID < 10";
-            string query2 = "SELECT * FROM [Test_Users] WITH(NOLOCK) Where UserID > 10 AND UserID < 20 ;";
-            Assert.That(SqlClient.GetInstance().GetQueryResultDataTable(query1), Is.Not.Null);
-            Assert.That(SqlClient.GetInstance().GetQueryResultDataTable(query2), Is.Not.Null);
+            Assert.That(SqlClient.GetInstance().GetQueryResultDataTable(SQLQueries.GetAllUserDetailsWithLessThanUserID_10), Is.Not.Null);
+            Assert.That(SqlClient.GetInstance().GetQueryResultDataTable(SQLQueries.GetAllUserDetailsBetweenUserIDs_10_20), Is.Not.Null);
         }
 
         [Test, Category("Database Tests"), Order(3)]
         public void VerifyData()
         {
-            string query1 = "SELECT * FROM [Test_Users] WITH(NOLOCK) Where UserID < 10";
-            var data = SqlClient.GetInstance().GetQueryResultDataTable(query1);
-            var a = BusinessLogic.ConvertDataTableToList<User>(data);
+            var data = SqlClient.GetInstance().GetQueryResultDataTable(SQLQueries.GetAllUserDetailsWithLessThanUserID_10);
+            var dataList = businessLogic.ConvertDataTableToList<User>(data);
+            var actualUserIds = dataList.Select(x => x.UserID).ToList();
+            var expectedUserIds = Enumerable.Range(1, 9).ToList();
+            Assert.That(actualUserIds.SequenceEqual(expectedUserIds), Is.True);
+        }
+
+        [Test, Category("Database Tests"), Order(4)]
+        public void ValidateASpecificData()
+        {
+            var query = "SELECT [EmailID] FROM [Test_Users] WITH(NOLOCK) Where UserID = @UserID";
+            Dictionary<string, string> parameterList = new()
+            {
+                { "@UserID","1"}
+            };
+            var data = SqlClient.GetInstance().GetQueryResultDataTable(query, parameterList);
+            Assert.That(SqlClient.GetInstance().ValidateASpecificData(data, "user1@gmail.com.test"), Is.True);
         }
     }
 }

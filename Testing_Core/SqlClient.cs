@@ -50,6 +50,25 @@ namespace Testing_Core
             return dataTable;
         }
 
+        public DataTable GetQueryResultDataTable(string query, Dictionary<string, string> parameterDictionary)
+        {
+            DataTable dataTable = new();
+            using SqlCommand sqlCommand = new(query, GetConnection());
+            foreach (var item in parameterDictionary)
+            {
+                sqlCommand.Parameters.AddWithValue(item.Key, item.Value);
+            }
+
+            using SqlDataAdapter adapter = new(sqlCommand);
+            adapter.Fill(dataTable);
+            return dataTable;
+        }
+
+        public bool ValidateASpecificData(DataTable dataTable, string expectedValue)
+        {
+            return dataTable.Rows[0].ItemArray[0]!.ToString() == expectedValue;
+        }
+
         public SqlDataReader GetQueryResultSqlDataReader(string query)
         {
             using SqlCommand sqlCommand = new(query, GetConnection());

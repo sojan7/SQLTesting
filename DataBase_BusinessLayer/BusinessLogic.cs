@@ -4,7 +4,7 @@ namespace DataBase_BusinessLayer
 {
     public class BusinessLogic
     {
-        public static List<T> ConvertDataTableToList<T>(DataTable dt) where T : new()
+        public List<T> ConvertDataTableToList<T>(DataTable dt) where T : new()
         {
             List<T> data = [];
             foreach (DataRow row in dt.Rows)
